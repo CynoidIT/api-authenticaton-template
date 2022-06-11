@@ -12,6 +12,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
 app.use('/api/endpoint', require('./routes/endpointRoutes'))
+app.use('/api/user', require('./routes/userRoutes'))
 
 app.use(errorHandler)
 
