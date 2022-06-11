@@ -1,11 +1,14 @@
 const asyncHandler = require('express-async-handler')
+const Endpoint = require('../models/endpoiontModel')
 
 // @desc    Get Endpoint
 // @route   GET /api/endpoint
 // @access  Private
 
 const getEndpoint = asyncHandler(async (req, res) => {
-    res.status(200).json({message: 'GET'})
+const endpoints = await Endpoint.find()
+
+    res.status(200).json(endpoints)
 })
 
 // @desc    Set Endpoint
@@ -17,8 +20,11 @@ const setEndpoint = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('add text')
     }
+    const endpoint = await Endpoint.create({
+        text: req.body.text
+    })
 
-    res.status(200).json({message: 'POST'})
+    res.status(200).json(endpoint)
 })
 
 // @desc    Update Endpoint
@@ -26,7 +32,16 @@ const setEndpoint = asyncHandler(async (req, res) => {
 // @access  Private
 
 const updateEndpoint = asyncHandler(async (req, res) => {
-	res.status(200).json({message: `POST ${req.params.id}`})
+    const endpoint = await Endpoint.findById(req.params.id)
+
+    if(!endpoint) {
+        res.status(400)
+        throw new Error('Not found')
+    }
+
+    const updatedEndpoint = await Endpoint.findByIdAndUpdate(req.params.id, req.body, {new:true})
+
+	res.status(200).json(updatedEndpoint)
 })
 
 // @desc    Delete Endpoint
@@ -34,7 +49,17 @@ const updateEndpoint = asyncHandler(async (req, res) => {
 // @access  Private
 
 const deleteEndpoint = asyncHandler(async (req, res) => {
-	res.status(200).json({message: `DELETE ${req.params.id}`})
+
+    const endpoint = await Endpoint.findById(req.params.id)
+
+    if(!endpoint) {
+        res.status(400)
+        throw new Error('Not found')
+    }
+
+    await Endpoint.findByIdAndDelete(req.params.id)
+
+	res.status(200).json({id:req.params.id})
 })
 
 
