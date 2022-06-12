@@ -2,7 +2,9 @@ const express = require('express')
 const router = express.Router()
 const {getEndpoint, setEndpoint, updateEndpoint, deleteEndpoint} = require('../controllers/endpointController')
 
-router.route('/').get(getEndpoint).post(setEndpoint)
-router.route('/:id').put(updateEndpoint).delete(deleteEndpoint)
+const {protect} = require('../middleware/authMiddlware')
+
+router.route('/').get(protect, getEndpoint).post(protect, setEndpoint)
+router.route('/:id').put(protect, updateEndpoint).delete(protect, deleteEndpoint)
 
 module.exports = router
